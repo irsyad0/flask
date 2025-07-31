@@ -1,0 +1,9 @@
+Flask
+tensorflow
+opencv-python-headless
+scikit-learn
+numpy
+Pillow
+scipy
+scikit-image
+gunicorn
