@@ -21,8 +21,8 @@ tf.random.set_seed(42)
 np.random.seed(42)
 
 # --- Konfigurasi (Tidak Berubah) ---
-MODEL_PATH = 'model/model_deteksi_adam_0.0002.h5'
-UNET_MODEL_PATH = 'model/unet_lip_segmentation_model_crop.h5'
+MODEL_PATH = 'mmodel_deteksi_adam_0.0002.h5'
+UNET_MODEL_PATH = 'unet_lip_segmentation_model_crop.h5'
 
 # --- Variabel Global (Tidak Berubah) ---
 main_model = None
