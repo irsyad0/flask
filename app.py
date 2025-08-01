@@ -21,13 +21,13 @@ tf.random.set_seed(42)
 np.random.seed(42)
 
 # --- Konfigurasi (Tidak Berubah) ---
-MODEL_PATH = 'mmodel_deteksi_adam_0.0002.h5'
+MODEL_PATH = 'model_deteksi_adam_0.0002.h5'
 UNET_MODEL_PATH = 'unet_lip_segmentation_model_crop.h5'
 
 # --- Variabel Global (Tidak Berubah) ---
 main_model = None
 unet_segmentation_model = None
-label_encoder = None
+label_encoder = None # Ini tidak digunakan di kode yang Anda berikan, bisa dihapus jika tidak diperlukan
 feature_extractor_model = None
 TARGET_SIZE_CNN = (224, 224)
 UNET_IMG_WIDTH = 256
@@ -44,7 +44,10 @@ def load_all_models_and_encoder():
         print("✅ U-Net model loaded successfully.")
     except Exception as e:
         print(f"❌ Error loading U-Net model: {e}")
-    
+        # Penting: Jika model gagal dimuat, mungkin ada masalah dengan file itu sendiri
+        # atau dependensi. Log ini akan muncul di log Railway.
+        # Anda mungkin ingin keluar dari aplikasi atau menandai sebagai tidak sehat di sini.
+
     print("Loading Main CNN Model...")
     try:
         main_model = load_model(MODEL_PATH)
@@ -54,6 +57,11 @@ def load_all_models_and_encoder():
         print("✅ Main CNN model and feature extractor created from 'global_average_pooling2d_7'.")
     except Exception as e:
         print(f"❌ Error loading Main CNN model: {e}")
+        # Sama seperti di atas, jika gagal, ini sangat serius.
+
+# --- PENTING: Panggil fungsi pemuatan model di sini, di luar blok if __name__ == '__main__':
+# Ini akan memastikan model dimuat ketika aplikasi diimpor oleh server web (Gunicorn/uWSGI)
+load_all_models_and_encoder()
 
 # --- FUNGSI INTI YANG BARU ---
 
@@ -335,7 +343,7 @@ def identify_endpoint():
         traceback.print_exc()
         return jsonify({'status': 'error', 'error': f'Kesalahan internal server: {str(e)}'}), 500
 
-# --- Blok Eksekusi Utama ---
+# --- Blok Eksekusi Utama (hanya untuk pengembangan lokal) ---
 if __name__ == '__main__':
-    load_all_models_and_encoder()
+    # load_all_models_and_encoder() # Ini sudah dipanggil di atas, tidak perlu lagi di sini
     app.run(host='0.0.0.0', port=5000, debug=True)
